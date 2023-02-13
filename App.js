@@ -92,7 +92,7 @@ export default function App() {
 
   // console.log({ location, error });
   // console.log({ lati, long });
-  console.log({ favoriteList });
+  // console.log({ favoriteList });
 
   async function fetchWeatherData1(cityName) {
     let API1 = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&appid=${API_KEY}`;

@@ -25,7 +25,6 @@ import { Feather } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 
-
 export default function Weather({
   weatherData,
   fetchWeatherData,
@@ -98,7 +97,7 @@ export default function Weather({
     // var timestamp = 1676378429;
     var date = new Date(time * 1000);
     let result = date.toLocaleString().split(' ');
-    console.log(result);
+    // console.log(result);
     return [result[1], result[2]];
   }
 
@@ -177,28 +176,20 @@ export default function Weather({
               fontSize: 46,
             }}
           >
-            {name}
+            {name}{' '}
             {favoriteList.includes(name) ? (
               <AntDesign
-                // onPress={() => removeFromFavorite(name)}
-                onPress={() => {
-                  removeFromFavorite(name);
-                  // setIsFavorite(!isFavorite);
-                }}
+                onPress={() => removeFromFavorite(name)}
                 name="heart"
                 size={24}
                 color="red"
               />
             ) : (
               <AntDesign
-                // onPress={() => addToFavorite(name)}
-                onPress={() => {
-                  addToFavorite(name);
-                  // setIsFavorite(!isFavorite);
-                }}
-                name="heart"
+                onPress={() => addToFavorite(name)}
+                name="hearto"
                 size={24}
-                color="black"
+                color="red"
               />
             )}
           </Text>
@@ -307,20 +298,24 @@ export default function Weather({
           >
             5 Day Forecast
           </Text>
-          <Fontisto
-            style={{
-              width: '100%',
-              display: 'flex',
-              alignItems: 'flex-end',
-              justifyContent: 'flex-end',
-              marginTop: '10',
-              marginRight: '10',
-            }}
-            name="favorite"
-            size={24}
-            color="black"
-            onPress={() => setShowFavorite(!showFavorite)}
-          />
+
+          {showFavorite ? (
+            <Entypo
+              style={styles.favIcon}
+              name="squared-cross"
+              size={24}
+              color="red"
+              onPress={() => setShowFavorite(!showFavorite)}
+            />
+          ) : (
+            <Fontisto
+              style={styles.favIcon}
+              name="favorite"
+              size={24}
+              color="green"
+              onPress={() => setShowFavorite(!showFavorite)}
+            />
+          )}
         </View>
 
         {showFavorite ? (
@@ -355,7 +350,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width: Dimensions.get('screen').width,
     paddingBottom: 10,
-
   },
   headerText: {
     fontSize: 36,
@@ -399,5 +393,13 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     alignItems: 'center',
     // overflow: 'scroll',
+  },
+  favIcon: {
+    width: '100%',
+    display: 'flex',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+    marginTop: '10',
+    marginRight: '10',
   },
 });
