@@ -10,32 +10,45 @@ import {
   PermissionsAndroid,
   Platform,
   Button,
+  Alert,
 } from 'react-native';
 import Weather from './components/Weather';
 import SearchBar from './components/SearchBar';
 import FiveDayForecast from './components/FiveDayForecast';
 import Geolocation from 'react-native-geolocation-service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Navigation } from 'react-native-navigation';
+// import { Navigation } from 'react-native-navigation';
+// import { createStackNavigator } from 'react-navigation-stack';
+import Favorite from './components/Favorite';
+import { Fontisto } from '@expo/vector-icons';
 
 // const API_KEY = "46a9246bebba16d42b36aac3fc3ba8af";
 const API_KEY = '244d6c48fa63a6d22eb3af1c7ca57865';
 
-Navigation.events().registerAppLaunchedListener(() => {
-  Navigation.setRoot({
-    root: {
-      stack: {
-        children: [
-          {
-            component: {
-              name: 'com.myApp.WelcomeScreen',
-            },
-          },
-        ],
-      },
-    },
-  });
-});
+// Navigation.events().registerAppLaunchedListener(() => {
+//   Navigation.setRoot({
+//     root: {
+//       stack: {
+//         children: [
+//           {
+//             component: {
+//               name: 'com.myApp.WelcomeScreen',
+//             },
+//           },
+//         ],
+//       },
+//     },
+//   });
+// });
+
+// const AppNavigator = createStackNavigator({
+//   Home: {
+//     screen: HomeScreen,
+//   },
+//   Details: {
+//     screen: DetailsScreen,
+//   },
+// });
 
 export default function App() {
   const [weatherData, setWeatherData] = useState(null);
@@ -52,6 +65,8 @@ export default function App() {
   const [favoriteList, setFavoriteList] = useState([]);
   const [cityName, setCityName] = useState('');
 
+  const [showFavorite, setShowFavorite] = useState(false);
+
   async function fetchFavoritePlaceList() {
     const data = await AsyncStorage.getItem('favoritePlaceList');
     if (data) setFavoriteList(JSON.parse(data));
@@ -65,7 +80,7 @@ export default function App() {
 
   Geolocation.getCurrentPosition(
     (position) => {
-      console.log(position);
+      // console.log(position);
       setLati(position.coords.latitude);
       setLong(position.coords.longitude);
     },
@@ -92,8 +107,36 @@ export default function App() {
         setWeatherData(data1);
         setFiveDayForecast(data2);
       }
+      if (response1.status === 404) {
+        Alert.alert(
+          'My Alert Title',
+          'My Alert Message',
+          [
+            {
+              text: 'Cancel',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+            { text: 'OK', onPress: () => console.log('OK Pressed') },
+          ],
+          { cancelable: false }
+        );
+      }
       setLoaded(false);
     } catch (error) {
+      Alert.alert(
+        'My Alert Title',
+        'My Alert Message',
+        [
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+          { text: 'OK', onPress: () => console.log('OK Pressed') },
+        ],
+        { cancelable: false }
+      );
       console.log(error);
       setLoaded(false);
     }
@@ -129,7 +172,7 @@ export default function App() {
 
   useEffect(() => {
     fetchWeatherData1(cityName);
-    console.log('calling');
+    // console.log('calling');
   }, [cityName]);
 
   useEffect(() => {
@@ -155,8 +198,36 @@ export default function App() {
 
   return (
     <>
+      {/* <NavigationContainer> */}
+      {/* <AppNavigator /> */}
       {weatherData && fiveDayForecast ? (
         <View style={styles.container}>
+          <Fontisto
+            style={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'flex-end',
+              justifyContent: 'flex-end',
+              marginTop: '10',
+              marginRight: '10',
+            }}
+            name="favorite"
+            size={24}
+            color="green"
+            onPress={() => setShowFavorite(!showFavorite)}
+          />
+
+          {showFavorite ? (
+            <Favorite
+              favoriteList={favoriteList}
+              setCityName={setCityName}
+              setShowFavorite={setShowFavorite}
+              style={{
+                backgroundColor: 'blue',
+              }}
+            />
+          ) : null}
+
           <Weather
             weatherData={weatherData}
             fiveDayForecast={fiveDayForecast}
@@ -169,6 +240,7 @@ export default function App() {
       ) : (
         <Text style={styles.primaryText}>Loading</Text>
       )}
+      {/* </NavigationContainer> */}
     </>
   );
 }

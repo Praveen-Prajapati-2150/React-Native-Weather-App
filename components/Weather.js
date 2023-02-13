@@ -193,7 +193,7 @@ export default function Weather({
               justifyContent: 'space-between',
             }}
           >
-            <Text style={{ fontSize: 20 }}>{temp_min} °C</Text>
+            <Text style={{ fontSize: 16, paddingLeft: 5 }}>Min {temp_min} °C</Text>
             <Text
               style={{
                 ...styles.headerText,
@@ -203,7 +203,7 @@ export default function Weather({
             >
               {temp} °C
             </Text>
-            <Text style={{ fontSize: 20 }}>{temp_max} °C</Text>
+            <Text style={{ fontSize: 16, paddingRight: 5 }}>Max {temp_max} °C</Text>
           </View>
         </View>
 
@@ -273,6 +273,21 @@ export default function Weather({
         <View style={styles.tempRow}>
           {fiveDayData &&
             fiveDayData[3]?.map((item, index) => {
+              return (
+                <View style={styles.tempDiv}>
+                  <Text style={styles.fiveDay}>
+                    {parseFloat(item.main.temp - 273).toFixed(2) + ' '}°C
+                  </Text>
+                  <Text>{DateStamp(item.dt_txt)}</Text>
+                  <Text>{TimeStamp__(item.dt_txt)}</Text>
+                </View>
+              );
+            })}
+        </View>
+
+        <View style={styles.tempRow}>
+          {fiveDayData &&
+            fiveDayData[4]?.map((item, index) => {
               return (
                 <View style={styles.tempDiv}>
                   <Text style={styles.fiveDay}>
