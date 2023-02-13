@@ -30,7 +30,7 @@ export default function FiveDayForecast({ fiveDayData }) {
   }
 
   function setMaxAndMin(temp) {
-    console.log({ temp });
+    // console.log({ temp });
     setMax(temp);
     // let max = 0;
     // let min = 0;
@@ -42,7 +42,7 @@ export default function FiveDayForecast({ fiveDayData }) {
     }
   }
 
-  console.log({ min, max });
+//   console.log({ min, max });
 
   useEffect(() => {
     setDate(DateStamp(fiveDayData[0].dt_txt));
@@ -100,18 +100,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingRight: 10,
     alignItems: 'center',
+    width: '100%',
     overflow: 'scroll',
     // backgroundColor: 'grey',
     borderRadius: 10,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    // backgroundBlur: '5px',
-    // backgroundImage:
-    //   'linear-gradient(45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent)',
+    backgroundColor: 'rgba(0, 0, 0, 0.55)',
     boxShadow: '0 0 10px 2px rgba(0, 0, 0, 0.1)',
-    backfaceVisibility: 'hidden',
-
-    // background-size: 20px 20px,
-    // border-radius: 50%,
+    // backfaceVisibility: 'hidden',
     backdropFilter: 'blur(20)',
   },
   tempDiv: {
@@ -121,7 +116,6 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     paddingBottom: 5,
     alignItems: 'center',
-    // overflow: 'scroll',
     color: 'white',
   },
 
@@ -139,5 +133,6 @@ const styles = StyleSheet.create({
     fontStyle: 'bold',
     fontWeight: 600,
     color: 'gray',
+    color: 'black',
   },
 });

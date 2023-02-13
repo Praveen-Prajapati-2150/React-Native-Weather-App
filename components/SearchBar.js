@@ -12,6 +12,7 @@ export default function SearchBar({ cityName, setCityName }) {
   return (
     <View style={styles.searchBar}>
       <TextInput
+        style={styles.input}
         placeholder="Enter City name"
         value={name}
         onChangeText={(text) => setName(text)}
@@ -27,6 +28,9 @@ export default function SearchBar({ cityName, setCityName }) {
 }
 
 const styles = StyleSheet.create({
+  input: {
+    // backgroundColor: 'rgba(255, 255, 255, 0.5)',
+  },
   searchBar: {
     marginTop: 10,
     flexDirection: 'row',
@@ -34,11 +38,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: Dimensions.get('screen').width - 20,
     borderWidth: 1.5,
-    paddingVertical: 10,
+    paddingVertical: 5,
     borderRadius: 25,
     marginHorizontal: 10,
     paddingHorizontal: 10,
-    backgroundColor: 'lightgray',
-    borderColor: 'lightgray',
+    // backgroundColor: 'lightgray',
+    // borderColor: 'lightgray',
+    borderColor: 'rgba(255, 255, 255, 1)',
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+
   },
 });

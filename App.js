@@ -108,7 +108,7 @@ export default function App() {
         setFiveDayForecast(data2);
       }
       if (response1.status === 404) {
-        setWeatherData(null)
+        setWeatherData(null);
         console.log(data1);
         console.log(data1.message);
         Alert.alert('Alert Title', 'My Alert Msg', [
@@ -117,7 +117,7 @@ export default function App() {
             onPress: () => console.log('Cancel Pressed'),
             style: 'cancel',
           },
-          {text: 'OK', onPress: () => console.log('OK Pressed')},
+          { text: 'OK', onPress: () => console.log('OK Pressed') },
         ]);
       }
       setLoaded(false);
@@ -200,10 +200,6 @@ export default function App() {
       {/* <AppNavigator /> */}
       {weatherData && fiveDayForecast ? (
         <View style={styles.container}>
-          
-
-        
-
           <Weather
             weatherData={weatherData}
             fiveDayForecast={fiveDayForecast}
@@ -225,6 +221,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
+    // overflow: 'none',
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',

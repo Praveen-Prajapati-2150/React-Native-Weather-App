@@ -9,12 +9,22 @@ import {
   FlatList,
 } from 'react-native';
 import SearchBar from './SearchBar';
-import { haze, rainy, snow, sunny } from '../assets/backgroundImages/index';
+import {
+  haze,
+  rainy,
+  snow,
+  sunny,
+  shiny,
+} from '../assets/backgroundImages/index';
 import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FiveDayForecast from './FiveDayForecast';
 import { Fontisto } from '@expo/vector-icons';
 import Favorite from './Favorite';
+import { Feather } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
+
 
 export default function Weather({
   weatherData,
@@ -35,11 +45,9 @@ export default function Weather({
     weather,
     name,
     main: { temp, temp_max, temp_min, humidity },
+    sys: { sunrise, sunset },
     wind: { speed },
   } = weatherData;
-
-  // console.log({ weatherData });
-  // console.log({ fiveDayForecast });
 
   const {
     list,
@@ -81,9 +89,24 @@ export default function Weather({
       minute: 'numeric',
     };
     let result = date.toLocaleDateString('en-US', options).split(' ');
+    // console.log({result});
 
     return [result[4].length == 4 ? 0 + result[4] : result[4], result[5]];
   }
+
+  function timeZone(time) {
+    // var timestamp = 1676378429;
+    var date = new Date(time * 1000);
+    let result = date.toLocaleString().split(' ');
+    console.log(result);
+    return [result[1], result[2]];
+  }
+
+  let a = 1676338297;
+  let b = 1676378429;
+
+  console.log(timeZone(a));
+  console.log(timeZone(b));
 
   function TimeStamp(item) {
     if (data.length !== 0) {
@@ -138,6 +161,7 @@ export default function Weather({
       <StatusBar backgroundColor="darkgray" />
       <ImageBackground
         source={backgroundImage}
+        // source={shiny}
         style={styles.backgroundImg}
         resizeMode="cover"
       >
@@ -178,6 +202,7 @@ export default function Weather({
               />
             )}
           </Text>
+
           <Text
             style={{
               ...styles.headerText,
@@ -192,13 +217,14 @@ export default function Weather({
             style={{
               display: 'flex',
               flexDirection: 'row',
+              height: 'auto',
               width: '100%',
-              alignItems: 'center',
+              alignItems: 'flex-end',
               justifyContent: 'space-between',
             }}
           >
             <Text style={{ fontSize: 16, paddingLeft: 5 }}>
-              <AntDesign name="arrowdown" size={24} color="black" />
+              <AntDesign name="arrowdown" size={24} color="blue" />
               {temp_min} °C
             </Text>
             <Text
@@ -211,21 +237,51 @@ export default function Weather({
               {temp} °C
             </Text>
             <Text style={{ fontSize: 16, paddingRight: 5 }}>
-              <AntDesign name="arrowup" size={24} color="black" />
-              Max {temp_max} °C
+              <AntDesign name="arrowup" size={24} color="red" />
+              {temp_max} °C
             </Text>
           </View>
         </View>
 
         <View style={styles.extraInfo}>
           <View style={styles.info}>
-            <Text style={{ fontSize: 22, color: 'white' }}>Humidity</Text>
-            <Text style={{ fontSize: 22, color: 'white' }}>{humidity} %</Text>
+            <Text style={{ fontSize: 18, color: 'white' }}>Humidity</Text>
+            <Text style={{ fontSize: 18, color: 'white' }}>{humidity} %</Text>
           </View>
 
           <View style={styles.info}>
-            <Text style={{ fontSize: 22, color: 'white' }}>Wind Speed</Text>
-            <Text style={{ fontSize: 22, color: 'white' }}>{speed} m/s</Text>
+            <Text style={{ fontSize: 18, color: 'white' }}>
+              <Feather
+                name="sunrise"
+                size={24}
+                color="orange"
+                style={{ paddingRight: 5 }}
+              />
+              {/* Sunrise */}
+              {timeZone(sunrise)[0].slice(0, -3).length == 4
+                ? 0 + timeZone(sunrise)[0].slice(0, -3)
+                : timeZone(sunrise)[0].slice(0, -3)}{' '}
+              {timeZone(sunrise)[1]}
+            </Text>
+            <Text title="sunset" style={{ fontSize: 18, color: 'white' }}>
+              {/* <MaterialCommunityIcons name="weather-sunset" size={24} /> */}
+              <Entypo
+                name="moon"
+                size={24}
+                color="white"
+                style={{ paddingRight: 5 }}
+              />
+              {/* Sunset  */}
+              {timeZone(sunset)[0].slice(0, -3).length == 4
+                ? 0 + timeZone(sunset)[0].slice(0, -3)
+                : timeZone(sunset)[0].slice(0, -3)}{' '}
+              {timeZone(sunset)[1]}
+            </Text>
+          </View>
+
+          <View style={styles.info}>
+            <Text style={{ fontSize: 18, color: 'white' }}>Wind Speed</Text>
+            <Text style={{ fontSize: 18, color: 'white' }}>{speed} m/s</Text>
           </View>
         </View>
 
@@ -298,10 +354,12 @@ const styles = StyleSheet.create({
   backgroundImg: {
     flex: 1,
     width: Dimensions.get('screen').width,
+    paddingBottom: 10,
+
   },
   headerText: {
     fontSize: 36,
-    marginTop: 10,
+    // marginTop: 10,
   },
   extraInfo: {
     flexDirection: 'row',
@@ -310,7 +368,8 @@ const styles = StyleSheet.create({
     padding: 6,
   },
   info: {
-    width: Dimensions.get('screen').width / 2.5,
+    // width: Dimensions.get('screen').width / 2.5,
+    // width: '30%',
     backgroundColor: 'rgba(0,0,0, 0.5)',
     paddingLeft: 10,
     paddingRight: 10,
