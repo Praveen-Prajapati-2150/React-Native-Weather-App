@@ -7,6 +7,15 @@ const Favorite = ({ favoriteList, setCityName, setShowFavorite }) => {
       {favoriteList?.map((item, index) => {
         return (
           <Text
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '100%',
+              fontSize: 20,
+              fontWeight: 500,
+              marginTop: 10,
+            }}
             onPress={() => {
               setShowFavorite(false);
               setCityName(item);

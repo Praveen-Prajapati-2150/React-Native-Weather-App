@@ -12,6 +12,9 @@ import SearchBar from './SearchBar';
 import { haze, rainy, snow, sunny } from '../assets/backgroundImages/index';
 import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import FiveDayForecast from './FiveDayForecast';
+import { Fontisto } from '@expo/vector-icons';
+import Favorite from './Favorite';
 
 export default function Weather({
   weatherData,
@@ -21,10 +24,11 @@ export default function Weather({
   setFavoriteList,
   cityName,
   setCityName,
+  setShowFavorite,
+  showFavorite,
 }) {
   const [backgroundImage, setBackgroundImage] = useState(null);
   const [color, setColor] = useState('black');
-  const [isFavorite, setIsFavorite] = useState(false);
   const [fiveDayData, setFiveDayData] = useState([]);
 
   const {
@@ -115,7 +119,7 @@ export default function Weather({
 
   // console.log({ data });
   // console.log({ oneDayData });
-  console.log({ fiveDayData });
+  // console.log({ fiveDayData });
 
   function addToFavorite(name) {
     setFavoriteList([...favoriteList, name]);
@@ -133,7 +137,7 @@ export default function Weather({
     <View style={styles.container}>
       <StatusBar backgroundColor="darkgray" />
       <ImageBackground
-        // source={backgroundImage}
+        source={backgroundImage}
         style={styles.backgroundImg}
         resizeMode="cover"
       >
@@ -193,7 +197,10 @@ export default function Weather({
               justifyContent: 'space-between',
             }}
           >
-            <Text style={{ fontSize: 16, paddingLeft: 5 }}>Min {temp_min} °C</Text>
+            <Text style={{ fontSize: 16, paddingLeft: 5 }}>
+              <AntDesign name="arrowdown" size={24} color="black" />
+              {temp_min} °C
+            </Text>
             <Text
               style={{
                 ...styles.headerText,
@@ -203,7 +210,10 @@ export default function Weather({
             >
               {temp} °C
             </Text>
-            <Text style={{ fontSize: 16, paddingRight: 5 }}>Max {temp_max} °C</Text>
+            <Text style={{ fontSize: 16, paddingRight: 5 }}>
+              <AntDesign name="arrowup" size={24} color="black" />
+              Max {temp_max} °C
+            </Text>
           </View>
         </View>
 
@@ -219,86 +229,61 @@ export default function Weather({
           </View>
         </View>
 
-        <View style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-          5 Day Forecast
+        <View
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexDirection: 'row',
+            width: '100%',
+            padding: 10,
+          }}
+        >
+          <Text
+            style={{
+              display: 'flex',
+              // alignItems: 'center',
+              // justifyContent: 'center',
+              width: '100%',
+              fontSize: 20,
+              fontWeight: 600,
+            }}
+          >
+            5 Day Forecast
+          </Text>
+          <Fontisto
+            style={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'flex-end',
+              justifyContent: 'flex-end',
+              marginTop: '10',
+              marginRight: '10',
+            }}
+            name="favorite"
+            size={24}
+            color="black"
+            onPress={() => setShowFavorite(!showFavorite)}
+          />
         </View>
 
-        <View style={styles.tempRow}>
-          {/* <Text>{DateStamp(fiveDayData[0].dt_txt)}</Text> */}
-          {/* <View>{fiveDayData && fiveDayData[0].dt_txt}</View> */}
-          {fiveDayData &&
-            fiveDayData[0]?.map((item, index) => {
-              return (
-                <View style={styles.tempDiv}>
-                  <Text style={styles.fiveDay}>
-                    {parseFloat(item.main.temp - 273).toFixed(2) + ' '}°C
-                  </Text>
-                  <Text>{DateStamp(item.dt_txt)}</Text>
-                  <Text>{TimeStamp__(item.dt_txt)}</Text>
-                </View>
-              );
-            })}
-        </View>
+        {showFavorite ? (
+          <Favorite
+            favoriteList={favoriteList}
+            setCityName={setCityName}
+            setShowFavorite={setShowFavorite}
+            style={{
+              backgroundColor: 'green',
+            }}
+          />
+        ) : null}
 
-        <View style={styles.tempRow}>
-          {fiveDayData &&
-            fiveDayData[1]?.map((item, index) => {
-              return (
-                <View style={styles.tempDiv}>
-                  <Text style={styles.fiveDay}>
-                    {parseFloat(item.main.temp - 273).toFixed(2) + ' '}°C
-                  </Text>
-                  <Text>{DateStamp(item.dt_txt)}</Text>
-                  <Text>{TimeStamp__(item.dt_txt)}</Text>
-                </View>
-              );
-            })}
-        </View>
-
-        <View style={styles.tempRow}>
-          {fiveDayData &&
-            fiveDayData[2]?.map((item, index) => {
-              return (
-                <View style={styles.tempDiv}>
-                  <Text style={styles.fiveDay}>
-                    {parseFloat(item.main.temp - 273).toFixed(2) + ' '}°C
-                  </Text>
-                  <Text>{DateStamp(item.dt_txt)}</Text>
-                  <Text>{TimeStamp__(item.dt_txt)}</Text>
-                </View>
-              );
-            })}
-        </View>
-
-        <View style={styles.tempRow}>
-          {fiveDayData &&
-            fiveDayData[3]?.map((item, index) => {
-              return (
-                <View style={styles.tempDiv}>
-                  <Text style={styles.fiveDay}>
-                    {parseFloat(item.main.temp - 273).toFixed(2) + ' '}°C
-                  </Text>
-                  <Text>{DateStamp(item.dt_txt)}</Text>
-                  <Text>{TimeStamp__(item.dt_txt)}</Text>
-                </View>
-              );
-            })}
-        </View>
-
-        <View style={styles.tempRow}>
-          {fiveDayData &&
-            fiveDayData[4]?.map((item, index) => {
-              return (
-                <View style={styles.tempDiv}>
-                  <Text style={styles.fiveDay}>
-                    {parseFloat(item.main.temp - 273).toFixed(2) + ' '}°C
-                  </Text>
-                  <Text>{DateStamp(item.dt_txt)}</Text>
-                  <Text>{TimeStamp__(item.dt_txt)}</Text>
-                </View>
-              );
-            })}
-        </View>
+        {fiveDayData &&
+          fiveDayData?.map((item, index) => {
+            return (
+              <FiveDayForecast kye={index} fiveDayData={fiveDayData[index]} />
+            );
+          })}
       </ImageBackground>
     </View>
   );
@@ -320,15 +305,17 @@ const styles = StyleSheet.create({
   },
   extraInfo: {
     flexDirection: 'row',
-    marginTop: 20,
+    marginTop: 10,
     justifyContent: 'space-between',
-    padding: 10,
+    padding: 6,
   },
   info: {
     width: Dimensions.get('screen').width / 2.5,
     backgroundColor: 'rgba(0,0,0, 0.5)',
-    padding: 10,
-    borderRadius: 15,
+    paddingLeft: 10,
+    paddingRight: 10,
+    padding: 6,
+    borderRadius: 10,
     justifyContent: 'center',
   },
   fiveDay: {
@@ -342,7 +329,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 'auto',
     alignItems: 'center',
-    overflow: 'scroll',
+    // overflow: 'scroll',
   },
   tempDiv: {
     display: 'flex',
@@ -352,6 +339,6 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     paddingBottom: 5,
     alignItems: 'center',
-    overflow: 'scroll',
+    // overflow: 'scroll',
   },
 });

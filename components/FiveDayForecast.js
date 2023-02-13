@@ -1,121 +1,143 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ImageBackground,
-  Dimensions,
-  StatusBar,
-} from 'react-native';
-import SearchBar from './SearchBar';
-import { haze, rainy, snow, sunny } from '../assets/backgroundImages/index';
+import { View, Text, StyleSheet } from 'react-native';
+import styled from '../styles/fivedayforecast.css';
 
-export default function FiveDayForecast({ fiveDayForecast }) {
-  const [backgroundImage, setBackgroundImage] = useState(null);
+export default function FiveDayForecast({ fiveDayData }) {
+  let [date, setDate] = useState();
+  let [max, setMax] = useState();
+  let [min, setMin] = useState();
 
-//   console.log({ fiveDayForecast });
+  function DateStamp(dateString) {
+    let date = new Date(dateString);
+    let options = { year: 'numeric', month: 'long', day: 'numeric' };
+    let result = date.toLocaleDateString('en-US', options).split(' ');
 
-//   const {
-//     weather,
-//     name,
-//     main: { temp, humidity },
-//     wind: { speed },
-//   } = weatherData;
+    return [result[1], result[0].substring(0, 3)];
+  }
 
-//   console.log({ fiveDayForecast });
+  function TimeStamp__(timestamp) {
+    let date = new Date(timestamp);
+    let options = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+    };
+    let result = date.toLocaleDateString('en-US', options).split(' ');
 
-//   const [{ main }] = weather;
+    return [result[4].length == 4 ? 0 + result[4] : result[4], result[5]];
+  }
 
-//   useEffect(() => {
-//     setBackgroundImage(getBackgroundImg(main));
-//   }, [weatherData]);
+  function setMaxAndMin(temp) {
+    console.log({ temp });
+    setMax(temp);
+    // let max = 0;
+    // let min = 0;
+    // setMin(temp);
+    if (temp > max) {
+      setMax(temp);
+    } else if (temp < min) {
+      //   setMin(temp);
+    }
+  }
 
-//   function getBackgroundImg(weather) {
-//     if (weather === 'Snow') return snow;
-//     if (weather === 'Clear') return sunny;
-//     if (weather === 'Rain') return rainy;
-//     if (weather === 'Haze') return haze;
-//     return haze;
-//   }
+  console.log({ min, max });
 
-  let textColor = backgroundImage !== sunny ? 'white' : 'black';
+  useEffect(() => {
+    setDate(DateStamp(fiveDayData[0].dt_txt));
+    // console.log(DateStamp(fiveDayData[0].dt_txt));
+  }, [fiveDayData]);
+
+  useEffect(() => {
+    setMin(0);
+    setMax(0);
+    fiveDayData?.map((item, index) => {
+      return setMaxAndMin(parseFloat(item.main.temp - 273).toFixed(2));
+    });
+  }, [fiveDayData]);
 
   return (
-    <View style={styles.container}>
-      <StatusBar backgroundColor="darkgray" />
-      <ImageBackground
-        source={backgroundImage}
-        style={styles.backgroundImg}
-        resizeMode="cover"
-      >
-        {/* <SearchBar fetchWeatherData={fetchWeatherData} /> */}
-
-        <View style={{ alignItems: 'center' }}>
-          <Text
-            style={{
-              ...styles.headerText,
-              color: textColor,
-              fontWeight: 'bold',
-              fontSize: 46,
-            }}
-          >
-            {/* {name} */}
-          </Text>
-          <Text
-            style={{
-              ...styles.headerText,
-              color: textColor,
-              fontWeight: 'bold',
-            }}
-          >
-            {/* {main} */}
-          </Text>
-          <Text style={{ ...styles.headerText, color: textColor }}>
-            {/* {temp} °C */}
-          </Text>
-        </View>
-
-        <View style={styles.extraInfo}>
-          <View style={styles.info}>
-            <Text style={{ fontSize: 22, color: 'white' }}>Humidity</Text>
-            {/* <Text style={{ fontSize: 22, color: 'white' }}>{humidity} %</Text> */}
-          </View>
-
-          <View style={styles.info}>
-            <Text style={{ fontSize: 22, color: 'white' }}>Wind Speed</Text>
-            {/* <Text style={{ fontSize: 22, color: 'white' }}>{speed} m/s</Text> */}
-          </View>
-        </View>
-      </ImageBackground>
+    <View style={styles.main}>
+      <View>
+        <Text style={styles.date}>{date}</Text>
+        {/* <Text style={styled.line}>{date}</Text> */}
+        {/* <Text>
+          min{min}, max{max}
+        </Text> */}
+      </View>
+      <View style={styles.tempRow}>
+        {fiveDayData &&
+          fiveDayData?.map((item, index) => {
+            return (
+              <View kye={index} style={styles.tempDiv}>
+                <Text style={styles.fiveDay}>
+                  {parseFloat(item.main.temp - 273).toFixed(2) + ' '}°C
+                </Text>
+                <Text style={styles.text}>{TimeStamp__(item.dt_txt)}</Text>
+              </View>
+            );
+          })}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
+  main: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    height: 'auto',
+    alignItems: 'flex-start',
+    overflow: 'scroll',
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingTop: 10,
   },
-  backgroundImg: {
-    flex: 1,
-    width: Dimensions.get('screen').width,
-  },
-  headerText: {
-    fontSize: 36,
-    marginTop: 10,
-  },
-  extraInfo: {
+  tempRow: {
+    display: 'flex',
     flexDirection: 'row',
-    marginTop: 20,
-    justifyContent: 'space-between',
-    padding: 10,
+    paddingRight: 10,
+    alignItems: 'center',
+    overflow: 'scroll',
+    // backgroundColor: 'grey',
+    borderRadius: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    // backgroundBlur: '5px',
+    // backgroundImage:
+    //   'linear-gradient(45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent)',
+    boxShadow: '0 0 10px 2px rgba(0, 0, 0, 0.1)',
+    backfaceVisibility: 'hidden',
+
+    // background-size: 20px 20px,
+    // border-radius: 50%,
+    backdropFilter: 'blur(20)',
   },
-  info: {
-    width: Dimensions.get('screen').width / 2.5,
-    backgroundColor: 'rgba(0,0,0, 0.5)',
-    padding: 10,
-    borderRadius: 15,
-    justifyContent: 'center',
+  tempDiv: {
+    display: 'flex',
+    flexDirection: 'column',
+    paddingLeft: 10,
+    paddingTop: 5,
+    paddingBottom: 5,
+    alignItems: 'center',
+    // overflow: 'scroll',
+    color: 'white',
+  },
+
+  fiveDay: {
+    color: 'white',
+    fontSize: 20,
+  },
+
+  text: {
+    color: 'white',
+  },
+
+  date: {
+    fontSize: 18,
+    fontStyle: 'bold',
+    fontWeight: 600,
+    color: 'gray',
   },
 });

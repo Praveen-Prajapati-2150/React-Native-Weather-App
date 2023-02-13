@@ -101,26 +101,24 @@ export default function App() {
     try {
       const response1 = await fetch(API1);
       const response2 = await fetch(API2);
+      const data1 = await response1.json();
+      const data2 = await response2.json();
       if (response1.status == 200 && response2.status == 200) {
-        const data1 = await response1.json();
-        const data2 = await response2.json();
         setWeatherData(data1);
         setFiveDayForecast(data2);
       }
       if (response1.status === 404) {
-        Alert.alert(
-          'My Alert Title',
-          'My Alert Message',
-          [
-            {
-              text: 'Cancel',
-              onPress: () => console.log('Cancel Pressed'),
-              style: 'cancel',
-            },
-            { text: 'OK', onPress: () => console.log('OK Pressed') },
-          ],
-          { cancelable: false }
-        );
+        setWeatherData(null)
+        console.log(data1);
+        console.log(data1.message);
+        Alert.alert('Alert Title', 'My Alert Msg', [
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+          {text: 'OK', onPress: () => console.log('OK Pressed')},
+        ]);
       }
       setLoaded(false);
     } catch (error) {
@@ -142,7 +140,7 @@ export default function App() {
     }
   }
 
-  // console.log({ weatherData });
+  console.log({ weatherData });
   // console.log({ fiveDayForecast });
   // console.log({ cityName });
 
@@ -202,31 +200,9 @@ export default function App() {
       {/* <AppNavigator /> */}
       {weatherData && fiveDayForecast ? (
         <View style={styles.container}>
-          <Fontisto
-            style={{
-              width: '100%',
-              display: 'flex',
-              alignItems: 'flex-end',
-              justifyContent: 'flex-end',
-              marginTop: '10',
-              marginRight: '10',
-            }}
-            name="favorite"
-            size={24}
-            color="green"
-            onPress={() => setShowFavorite(!showFavorite)}
-          />
+          
 
-          {showFavorite ? (
-            <Favorite
-              favoriteList={favoriteList}
-              setCityName={setCityName}
-              setShowFavorite={setShowFavorite}
-              style={{
-                backgroundColor: 'blue',
-              }}
-            />
-          ) : null}
+        
 
           <Weather
             weatherData={weatherData}
@@ -235,6 +211,8 @@ export default function App() {
             setFavoriteList={setFavoriteList}
             cityName={cityName}
             setCityName={setCityName}
+            setShowFavorite={setShowFavorite}
+            showFavorite={showFavorite}
           />
         </View>
       ) : (

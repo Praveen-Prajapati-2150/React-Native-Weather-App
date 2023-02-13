@@ -28,7 +28,7 @@ export default function SearchBar({ cityName, setCityName }) {
 
 const styles = StyleSheet.create({
   searchBar: {
-    marginTop: 35,
+    marginTop: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
